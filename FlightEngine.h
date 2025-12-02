@@ -12,7 +12,7 @@ private:
     int dimension;
 
 public:
-    explicit FlightEngine(int d) : dimension(d) {}
+    explicit FlightEngine(const int d) : dimension(d) {}
 
     [[nodiscard]] std::vector<int> axialFlight() const;
     [[nodiscard]] std::vector<int> diagonalFlight() const;
