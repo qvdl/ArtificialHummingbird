@@ -11,11 +11,9 @@
 
 
 struct Hummingbird {
-private:
     std::vector<double> position;
     double fitness=0.0;
 
-public:
     Hummingbird() = default;
     explicit Hummingbird(const Problem& prob) {
         position.resize(prob.getLowerBound().size());
@@ -29,9 +27,6 @@ public:
 
         fitness = prob.evaluate(position);
     }
-
-    [[nodiscard]] const std::vector<double>& getPosition() const { return position; }
-    [[nodiscard]] double getFitness() const { return fitness; }
 };
 
 #endif //SF2565_PROJECT_HUMMINGBIRD_H
