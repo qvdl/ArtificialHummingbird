@@ -1,0 +1,42 @@
+//
+// Created by quinten on 12/2/25.
+//
+
+#ifndef SF2565_PROJECT_PROBLEM_H
+#define SF2565_PROJECT_PROBLEM_H
+
+#include <utility>
+#include <vector>
+#include <algorithm>
+#include <stdexcept>
+
+class Problem {
+private:
+    std::vector<double> lowerBound;
+    std::vector<double> upperBound;
+public:
+    virtual ~Problem() = default;
+
+    Problem(std::vector<double> low, std::vector<double> up) : lowerBound(std::move(low)), upperBound(std::move(up)) {
+        if (lowerBound.size() != upperBound.size()) {
+            throw std::invalid_argument("Bounds must have equal size!");
+        }
+    }
+
+    [[nodiscard]] virtual double evaluate(std::vector<double> solution) const = 0;
+
+    [[nodiscard]] const std::vector<double>& getLowerBound() const { return lowerBound; }
+    [[nodiscard]] const std::vector<double>& getUpperBound() const { return upperBound; }
+
+    [[nodiscard]] std::vector<double> clipToBoundaries(const std::vector<double>& solution) const {
+        std::vector<double> result(solution.size(), 0.0);
+        for (size_t i=0; i<solution.size(); ++i) {
+            result[i] = std::clamp(solution[i], lowerBound[i], upperBound[i]);
+        }
+
+        return result;
+    }
+};
+
+
+#endif //SF2565_PROJECT_PROBLEM_H
