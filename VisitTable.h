@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <stdexcept>
+#include "Hummingbird.h"
 
 
 /*
@@ -35,9 +36,14 @@ public:
     [[nodiscard]] int get(const int row, const int col) const {
         return matrix[getIndex(row, col)];
     }
+    int& at(int row, int col) { return matrix[getIndex(row, col)]; }
 
-    // getTarget()
-    // updateGuided()
+    void increment(const int row, const int col) {
+        matrix[getIndex(row, col)] += 1;
+    }
+
+    [[nodiscard]] int getTarget(int birdIndex, const std::vector<Hummingbird>& population) const;
+    void updateGuided(int currentBirdIndex, int targetBirdIndex, bool foodChanged);
     // updateMigration()
 };
 
