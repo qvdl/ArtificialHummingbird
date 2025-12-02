@@ -5,9 +5,18 @@
 #ifndef SF2565_PROJECT_FLIGHTENGINE_H
 #define SF2565_PROJECT_FLIGHTENGINE_H
 
-namespace FlightEngine {
-    class FlightEngine {
-    };
-} // FlightEngine
+#include <vector>
+
+class FlightEngine {
+private:
+    int dimension;
+
+public:
+    explicit FlightEngine(int d) : dimension(d) {}
+
+    [[nodiscard]] std::vector<int> axialFlight() const;
+    [[nodiscard]] std::vector<int> diagonalFlight() const;
+    [[nodiscard]] std::vector<int> omniFlight() const;
+};
 
 #endif //SF2565_PROJECT_FLIGHTENGINE_H
