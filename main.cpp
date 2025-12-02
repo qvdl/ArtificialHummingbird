@@ -1,6 +1,8 @@
 #include <iostream>
+#include "RNG_Utils.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    RNG_Utils::initialize(2025);
+
     return 0;
 }
