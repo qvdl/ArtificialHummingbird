@@ -27,6 +27,9 @@ struct Hummingbird {
 
         fitness = prob.evaluate(position);
     }
+
+    [[nodiscard]] std::vector<double> getPosition() const { return position; }
+    [[nodiscard]] double getFitness() const { return fitness; }
 };
 
 #endif //SF2565_PROJECT_HUMMINGBIRD_H
