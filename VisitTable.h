@@ -19,7 +19,7 @@
 class VisitTable {
 private:
     std::vector<int> matrix;
-    int size;
+    size_t size;
 
     [[nodiscard]] int getIndex(const int row, const int col) const {
         if (row<0 || col<0 || row>=size || col>=size) { throw std::out_of_range("VisitTable index out of range!"); }
@@ -36,13 +36,15 @@ public:
     [[nodiscard]] int get(const int row, const int col) const {
         return matrix[getIndex(row, col)];
     }
-    int& at(int row, int col) { return matrix[getIndex(row, col)]; }
+    int& at(const int row, const int col) { return matrix[getIndex(row, col)]; }
 
     void increment(const int row, const int col) {
-        matrix[getIndex(row, col)] += 1;
+        if (row!=col) matrix[getIndex(row, col)] += 1;
     }
 
     [[nodiscard]] int getTarget(int birdIndex, const std::vector<Hummingbird>& population) const;
+    [[nodiscard]] size_t getSize() const { return size; }
+
     void updateGuided(int currentBirdIndex, int targetBirdIndex, bool sourceReplaced);
     void updateTerritorial(int residentBirdIndex, bool sourceReplaced);
     void updateMigration(int migratedSourceIndex);

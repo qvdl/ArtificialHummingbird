@@ -7,6 +7,10 @@
 
 
 int VisitTable::getTarget(const int birdIndex, const std::vector<Hummingbird>& population) const {
+    if (population.size() != size) {
+        throw std::invalid_argument("Population size does not correspond to VT size.");
+    }
+
     int bestTarget=-1;
     int maxVisitTime=-1;
     double bestFitness = std::numeric_limits<double>::max();
