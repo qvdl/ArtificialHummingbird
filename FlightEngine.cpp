@@ -17,14 +17,22 @@ std::vector<int> FlightEngine::axialFlight() const {
 // equation (4)
 std::vector<int> FlightEngine::diagonalFlight() const {
     std::vector<int> mask(dimension, 0);
-    const double r1 = RNG_Utils::random01(); // r1 in (0, 1]
+    // compute random r1 in (0, 1]
+    double r1 = RNG_Utils::random01();
+    if (r1 <= 0.0) r1 = std::nextafter(0.0, 1.0);
+
+    // compute random k
     const int k_min = 2;
-    const int k_max = static_cast<int>(std::ceil(r1*(dimension-2)) + 1);
+    int k_max = static_cast<int>(std::ceil(r1*(dimension-2)) + 1);
+    if (k_max < k_min) k_max=k_min;
+    if (k_max > dimension) k_max=dimension;
+
     const int k = RNG_Utils::randomInt(k_min, k_max);
 
-    const auto permutation = RNG_Utils::randomPermutation(k);
-    for (int i=0; i<k; ++i) {
-        mask[permutation[i]] = 1;
+    // sample k unique axes from [0..dimension-1]
+    const auto fullPermutation = RNG_Utils::randomPermutation(dimension);
+    for (int idx=0; idx<k; ++idx) {
+        mask[ fullPermutation[idx] ] = 1;
     }
 
     return mask;
