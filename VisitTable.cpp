@@ -100,6 +100,26 @@ void VisitTable::updateTerritorial(int const residentBirdIndex, bool const sourc
     }
 }
 
+// Migration: the worst source is reinitialized uniformly in bounds.
+// migratedSourceIndex: column of the source that just migrated (i.e., the worst before reinit)
+void VisitTable::updateMigration(int const migratedSourceIndex) {
+
+    // When a source is updated/replaced (here via migration),
+    // every OTHER bird's memory of THAT source must jump to (row max + 1).
+    // Only columns change; we do NOT treat this as a "visit", so we don't touch rows' aging/zeros.
+    for (int r=0; r<size; ++r) {
+        if (r==migratedSourceIndex) continue;
+
+        int rowMax=0;
+        for (int c=0; c<size; ++c) {
+            if (c==r) continue;
+            int v = get(r,c);
+            if (v > rowMax) rowMax = v;
+        }
+
+        at(r,migratedSourceIndex) = rowMax + 1;
+    }
+}
 
 
 
