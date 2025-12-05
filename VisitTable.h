@@ -44,6 +44,7 @@ public:
 
     [[nodiscard]] int getTarget(int birdIndex, const std::vector<Hummingbird>& population) const;
     void updateGuided(int currentBirdIndex, int targetBirdIndex, bool sourceReplaced);
+    void updateTerritorial(int residentBirdIndex, bool sourceReplaced);
     // updateMigration()
 };
 
