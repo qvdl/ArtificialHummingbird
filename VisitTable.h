@@ -43,7 +43,7 @@ public:
     }
 
     [[nodiscard]] int getTarget(int birdIndex, const std::vector<Hummingbird>& population) const;
-    void updateGuided(int currentBirdIndex, int targetBirdIndex, bool foodChanged);
+    void updateGuided(int currentBirdIndex, int targetBirdIndex, bool sourceReplaced);
     // updateMigration()
 };
 

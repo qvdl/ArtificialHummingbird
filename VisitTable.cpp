@@ -36,31 +36,31 @@ int VisitTable::getTarget(const int birdIndex, const std::vector<Hummingbird>& p
     return bestTarget;
 }
 
-void VisitTable::updateGuided(const int currentBirdIndex, const int targetBirdIndex, const bool foodChanged) {
-    // increment all food sources in currentBird's row
-    for (int j=0; j<size; ++j) {
-        if (j == currentBirdIndex) continue;
-        int& value = at(currentBirdIndex, j);
+void VisitTable::updateGuided(const int currentBirdIndex, const int targetBirdIndex, const bool sourceReplaced) {
+    // increment all others, set target to 0 (and diagonal -1)
+    for (int c=0; c<size; ++c) {
+        if (c == currentBirdIndex || c == targetBirdIndex) continue;
+        int& value = at(currentBirdIndex, c);
         if (value != -1) { value += 1; }
     }
 
-    // reset currentBird's visit to targetBird
     at(currentBirdIndex, targetBirdIndex) = 0;
+    at(currentBirdIndex, currentBirdIndex) = -1;
 
     // if food improved, update column
-    if (foodChanged) {
-        // find maximum in targetBird's column
-        int maxVal = -1;
-        for (int i=0; i<size; ++i) {
-            if (i==targetBirdIndex) continue;
-            int val = get(i,targetBirdIndex);
-            if (val > maxVal) { maxVal = val; }
-        }
+    if (sourceReplaced) {
+        for (int r=0; r<size; ++r) {
+            if (r == currentBirdIndex) continue;
 
-        // update entries in targetBird's column
-        for (int i=0; i<size; ++i) {
-            if (i == currentBirdIndex || i == targetBirdIndex) { continue; }
-            at(i, targetBirdIndex) = maxVal+1;
+            int rowMax=0;
+            for (int c=0; c<size; ++c) {
+                if (c == r) continue; // skip diagonal
+                int v = get(r,c);
+                if (v>rowMax) rowMax=v;
+            }
+
+            // update the column of the replaced source
+            at(r,currentBirdIndex) = rowMax + 1;
         }
     }
 }
