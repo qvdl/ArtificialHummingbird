@@ -14,7 +14,7 @@ struct AbsoluteValueProblem final : public Problem {
         std::vector<double>(dimension, 10.0)
     ) {}
 
-    double evaluate(std::vector<double> &x) const override {
+    [[nodiscard]] double evaluate(const std::vector<double> &x) const override {
         double sum=0.0;
         for (const auto v : x) { sum += std::abs(v); }
         return sum; // minimum is 0 at x=0

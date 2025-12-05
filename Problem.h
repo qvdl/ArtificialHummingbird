@@ -28,7 +28,7 @@ public:
         }
     }
 
-    [[nodiscard]] virtual double evaluate(std::vector<double>& x) const = 0;
+    [[nodiscard]] virtual double evaluate(const std::vector<double>& x) const = 0;
 
     [[nodiscard]] size_t dimension() const { return lowerBound.size(); }
     [[nodiscard]] const std::vector<double>& getLowerBound() const { return lowerBound; }

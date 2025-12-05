@@ -13,7 +13,7 @@ struct SphereProblem final : public Problem {
         std::vector<double>(dimension, 5.0)
         ) {}
 
-    double evaluate(std::vector<double> &x) const override {
+    [[nodiscard]] double evaluate(const std::vector<double> &x) const override {
         double sum=0.0;
         for (const auto v : x) { sum += v*v; }
         return sum; // solution if 0 at x=0
