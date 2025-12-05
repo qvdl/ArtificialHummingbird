@@ -17,4 +17,5 @@ add_executable(SF2565_PROJECT main.cpp
         Benchmarks.cpp
         Benchmarks.h
         RNG_Utils.h
-        RNG_Utils.cpp)
+        RNG_Utils.cpp
+        Problems/SphereProblem.h)
