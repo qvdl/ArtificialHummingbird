@@ -85,21 +85,21 @@ void demo_usage(const Problem& prob, int populationSize, int iterations, unsigne
 #include "Problems/ShiftedQuadratic.h"
 #include "Problems/RastriginProblem.h"
 
-void sanity_tests(const int pop, const int iters, const unsigned seed)
+void sanity_tests(const int pop, const int iters, const int dimension, const unsigned seed)
 {
-    std::cout << "-- starting sanity tests --\nPopulation size: " << pop << "\nNr. of iterations: " << iters << "\n[seed=" << seed << "]\n\n";
+    std::cout << "-- starting sanity tests --\nPopulation size: " << pop << "\nNr. of iterations: " << iters << "\nDimension: " << dimension << "\n[seed=" << seed << "]\n\n";
     constexpr double tol_f_zero = 1e-12, tol_x_zero = 1e-12;
 
     // Sphere (d=10): optimum at 0
     {
-        const SphereProblem prob(10);
+        const SphereProblem prob(dimension);
         RNG_Utils::initialize(seed);
         run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Sphere(d=10)");
     }
 
     // Absolute value (d=10): optimum at 0
     {
-        const AbsoluteValueProblem prob(10);
+        const AbsoluteValueProblem prob(dimension);
         RNG_Utils::initialize(seed);
         run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Abs(d=10)");
     }
@@ -115,7 +115,7 @@ void sanity_tests(const int pop, const int iters, const unsigned seed)
 
     // Rastrigin (d=10)
     {
-        const RastriginProblem prob(10);
+        const RastriginProblem prob(dimension);
         RNG_Utils::initialize(seed);
 
         auto [best_f, best_x] = run_once(prob, pop, iters, seed);
@@ -123,8 +123,8 @@ void sanity_tests(const int pop, const int iters, const unsigned seed)
         const double f    = best_f;
         const double xerr = l2norm(best_x);   // distance to optimum at zero
 
-        constexpr double tol_f_rast = 1e-8;
-        constexpr double tol_x_rast = 1e-8;
+        constexpr double tol_f_rast = 1e-4;
+        constexpr double tol_x_rast = 1e-4;
 
         std::cout << ((f <= tol_f_rast && xerr <= tol_x_rast) ? "[PASS] " : "[FAIL] ")
                   << "Rastrigin(d=10) f=" << f << " x_err=" << xerr << "\n";

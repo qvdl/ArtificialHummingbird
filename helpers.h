@@ -19,4 +19,4 @@ void run_and_check_to_point(const Problem& prob, int pop, int iters, const std::
 void demo_usage(const Problem& prob, int populationSize, int iterations, unsigned seed);
 
 // one-call sanity tests for Sphere / Abs / ShiftedQuadratic / Rastrigin
-void sanity_tests(int pop, int iters, unsigned seed);
+void sanity_tests(int pop, int iters, int dimension, unsigned seed);
