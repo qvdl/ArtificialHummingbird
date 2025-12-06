@@ -20,4 +20,5 @@ add_executable(SF2565_PROJECT main.cpp
         Problems/AbsoluteValueProblem.h
         Problems/ShiftedQuadratic.h
         helpers.cpp
-        helpers.h)
+        helpers.h
+        Problems/RastriginProblem.h)
