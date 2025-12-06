@@ -14,10 +14,10 @@ add_executable(SF2565_PROJECT main.cpp
         AHA_Config.h
         Problem.cpp
         Problem.h
-        Benchmarks.cpp
-        Benchmarks.h
         RNG_Utils.h
         RNG_Utils.cpp
         Problems/SphereProblem.h
         Problems/AbsoluteValueProblem.h
-        Problems/ShiftedQuadratic.h)
+        Problems/ShiftedQuadratic.h
+        helpers.cpp
+        helpers.h)
