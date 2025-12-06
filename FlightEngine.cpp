@@ -17,6 +17,12 @@ std::vector<int> FlightEngine::axialFlight() const {
 // equation (4)
 std::vector<int> FlightEngine::diagonalFlight() const {
     std::vector<int> mask(dimension, 0);
+
+    // in 1D, diagonal move stays on the only axis
+    if (dimension <= 1) {
+        if (dimension == 1) { mask[0] = 1; }
+        return mask;
+    }
     // compute random r1 in (0, 1]
     double r1 = RNG_Utils::random01();
     if (r1 <= 0.0) r1 = std::nextafter(0.0, 1.0);
