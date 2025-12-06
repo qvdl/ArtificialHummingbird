@@ -93,14 +93,14 @@ void sanity_tests(const int pop, const int iters, const unsigned seed)
 
     // Sphere (d=10): optimum at 0
     {
-        SphereProblem prob(10);
+        const SphereProblem prob(10);
         RNG_Utils::initialize(seed);
         run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Sphere(d=10)");
     }
 
     // Absolute value (d=10): optimum at 0
     {
-        AbsoluteValueProblem prob(10);
+        const AbsoluteValueProblem prob(10);
         RNG_Utils::initialize(seed);
         run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Abs(d=10)");
     }
@@ -109,7 +109,7 @@ void sanity_tests(const int pop, const int iters, const unsigned seed)
     {
         constexpr double tol_x_pt   = 1e-4;
         constexpr double tol_f_pt   = 1e-8;
-        ShiftedQuadratic prob;
+        const ShiftedQuadratic prob;
         RNG_Utils::initialize(seed);
         run_and_check_to_point(prob, pop, iters, {3.0, -2.0}, tol_f_pt, tol_x_pt, "ShiftedQuadratic");
     }
