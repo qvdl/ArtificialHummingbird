@@ -36,14 +36,14 @@ void AHA_Optimizer::solve() {
     const int n = static_cast<int>(population.size());
     const int d = static_cast<int>(problem.getLowerBound().size());
     const int M = 2 * n;                 // migration coefficient (paper default)
-    const double guidedProb = 0.5;       // 50/50 guided vs territorial
+    constexpr double guidedProb = 0.5;       // 50/50 guided vs territorial
 
     auto pickFlightMask = [&]() -> std::vector<int> {
         // choose axial / diagonal / omni with equal probability
         const double u = RNG_Utils::random01();
         if (u < 1.0/3.0)      return flightEngine.axialFlight();
-        else if (u < 2.0/3.0) return flightEngine.diagonalFlight();
-        else                  return flightEngine.omniFlight();
+        if (u < 2.0/3.0) return flightEngine.diagonalFlight();
+        return flightEngine.omniFlight();
     };
 
     auto guidedCandidate = [&](const std::vector<double>& xi,
@@ -70,11 +70,12 @@ void AHA_Optimizer::solve() {
 
     for (int iter = 1; iter <= maxIterations; ++iter) {
 
-        // --- per-bird foraging ------------------------------------------------
+        // --- per-bird foraging ---
         for (int i = 0; i < n; ++i) {
             bool replaced = false;
 
-            if (RNG_Utils::random01() < guidedProb) {
+            // Do guided foraging with prob. 0.5, if population is at least 2
+            if (RNG_Utils::random01() < guidedProb && n >= 2) {
                 // ------- GUIDED FORAGING -------
                 const int j = visitTable.getTarget(i, population); // target by visit-level, tie-break by fitness
 
