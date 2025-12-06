@@ -87,7 +87,7 @@ void demo_usage(const Problem& prob, int populationSize, int iterations, unsigne
 
 void sanity_tests(const int pop, const int iters, const unsigned seed)
 {
-    std::cout << "Population size: " << pop << "\nNr. of iterations: " << iters << "\n[seed=" << seed << "]\n\n";
+    std::cout << "-- starting sanity tests --\nPopulation size: " << pop << "\nNr. of iterations: " << iters << "\n[seed=" << seed << "]\n\n";
     // tolerances kept modest; adjust if you like
     constexpr double tol_f_zero = 1e-8, tol_x_zero = 1e-4;
 
@@ -131,4 +131,6 @@ void sanity_tests(const int pop, const int iters, const unsigned seed)
         std::cout << ((f <= tol_f_rast && xerr <= tol_x_rast) ? "[PASS] " : "[FAIL] ")
                   << "Rastrigin(d=10) f=" << f << " x_err=" << xerr << "\n";
     }
+
+    std::cout << "-- sanity tests finished --\n\n";
 }
