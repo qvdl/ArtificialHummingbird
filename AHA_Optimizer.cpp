@@ -10,20 +10,18 @@
 #include <algorithm>
 
 
-// ---- constructor ------------------------------------------------------------
+// --- constructor ---
 AHA_Optimizer::AHA_Optimizer(const Problem& prob, int populationSize, int maxIter)
-    : population(),               // filled below
-      visitTable(populationSize), // diagonal -1, others 0
+    : visitTable(populationSize), // diagonal -1, others 0
       flightEngine(static_cast<int>(prob.getLowerBound().size())),
       globalBestPosition(prob.getLowerBound().size(), 0.0),
       globalBestFitness(std::numeric_limits<double>::infinity()),
       problem(prob),
       maxIterations(maxIter)
 {
-    // Initialize population uniformly in bounds
     population.reserve(populationSize);
     for (int i = 0; i < populationSize; ++i) {
-        population.emplace_back(prob);              // your Hummingbird(prob) ctor
+        population.emplace_back(prob);
         if (population.back().fitness < globalBestFitness) {
             globalBestFitness = population.back().fitness;
             globalBestPosition = population.back().position;
@@ -31,7 +29,7 @@ AHA_Optimizer::AHA_Optimizer(const Problem& prob, int populationSize, int maxIte
     }
 }
 
-// ---- solve ------------------------------------------------------------------
+// --- solve ---
 void AHA_Optimizer::solve() {
     const int n = static_cast<int>(population.size());
     const int d = static_cast<int>(problem.getLowerBound().size());
@@ -76,7 +74,7 @@ void AHA_Optimizer::solve() {
 
             // Do guided foraging with prob. 0.5, if population is at least 2
             if (RNG_Utils::random01() < guidedProb && n >= 2) {
-                // ------- GUIDED FORAGING -------
+                // --- GUIDED FORAGING ---
                 const int j = visitTable.getTarget(i, population); // target by visit-level, tie-break by fitness
 
                 // build candidate near target
@@ -99,7 +97,7 @@ void AHA_Optimizer::solve() {
                 visitTable.updateGuided(i, j, replaced);
 
             } else {
-                // ------- TERRITORIAL FORAGING -------
+                // --- TERRITORIAL FORAGING ---
                 const auto v   = territorialCandidate(population[i].position);
                 const double fv = problem.evaluate(v);
 
@@ -119,7 +117,7 @@ void AHA_Optimizer::solve() {
             }
         }
 
-        // --- migration every M iterations ------------------------------------
+        // --- migration every M iterations ---
         if (iter % M == 0) {
             // find worst by fitness (highest, since we minimize)
             int worst = 0;

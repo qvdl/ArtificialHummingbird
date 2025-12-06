@@ -88,8 +88,7 @@ void demo_usage(const Problem& prob, int populationSize, int iterations, unsigne
 void sanity_tests(const int pop, const int iters, const unsigned seed)
 {
     std::cout << "-- starting sanity tests --\nPopulation size: " << pop << "\nNr. of iterations: " << iters << "\n[seed=" << seed << "]\n\n";
-    // tolerances kept modest; adjust if you like
-    constexpr double tol_f_zero = 1e-8, tol_x_zero = 1e-4;
+    constexpr double tol_f_zero = 1e-12, tol_x_zero = 1e-12;
 
     // Sphere (d=10): optimum at 0
     {
@@ -107,8 +106,8 @@ void sanity_tests(const int pop, const int iters, const unsigned seed)
 
     // ShiftedQuadratic (2D): optimum at (3,-2)
     {
-        constexpr double tol_x_pt   = 1e-4;
-        constexpr double tol_f_pt   = 1e-8;
+        constexpr double tol_x_pt   = 1e-12;
+        constexpr double tol_f_pt   = 1e-12;
         const ShiftedQuadratic prob;
         RNG_Utils::initialize(seed);
         run_and_check_to_point(prob, pop, iters, {3.0, -2.0}, tol_f_pt, tol_x_pt, "ShiftedQuadratic");
@@ -124,9 +123,8 @@ void sanity_tests(const int pop, const int iters, const unsigned seed)
         const double f    = best_f;
         const double xerr = l2norm(best_x);   // distance to optimum at zero
 
-        // Rastrigin is harder → tolerances are looser
-        constexpr double tol_f_rast = 1e-2;   // adjust if you want stricter
-        constexpr double tol_x_rast = 1e-2;
+        constexpr double tol_f_rast = 1e-8;
+        constexpr double tol_x_rast = 1e-8;
 
         std::cout << ((f <= tol_f_rast && xerr <= tol_x_rast) ? "[PASS] " : "[FAIL] ")
                   << "Rastrigin(d=10) f=" << f << " x_err=" << xerr << "\n";
