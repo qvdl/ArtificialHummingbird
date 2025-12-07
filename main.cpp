@@ -2,9 +2,9 @@
 
 int main() {
     constexpr int population_size = 50;
-    constexpr int nr_iterations = 1000;
+    constexpr int nr_iterations = 10'000;
     constexpr int dimension = 30;
-    constexpr int seed = 123;
+    constexpr int seed = 12345;
 
     sanity_tests(population_size, nr_iterations, dimension, seed);
 

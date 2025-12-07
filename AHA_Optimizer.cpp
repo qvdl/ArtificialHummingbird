@@ -6,12 +6,11 @@
 #include "AHA_Optimizer.h"
 #include "RNG_Utils.h"
 #include <limits>
-#include <cmath>
-#include <algorithm>
+#include <taskflow/algorithm/for_each.hpp>
 
 
 // --- constructor ---
-AHA_Optimizer::AHA_Optimizer(const Problem& prob, int populationSize, int maxIter)
+AHA_Optimizer::AHA_Optimizer(const Problem& prob, const int populationSize, const int maxIter)
     : visitTable(populationSize), // diagonal -1, others 0
       flightEngine(static_cast<int>(prob.getLowerBound().size())),
       globalBestPosition(prob.getLowerBound().size(), 0.0),
