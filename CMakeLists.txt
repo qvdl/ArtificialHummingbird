@@ -25,4 +25,5 @@ add_executable(SF2565_PROJECT main.cpp
         Problems/Rosenbrock.h
         Problems/Schwefel12.h
         Problems/Schwefel226.h
-        Problems/Griewank.h)
+        Problems/Griewank.h
+)

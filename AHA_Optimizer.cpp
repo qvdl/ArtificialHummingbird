@@ -39,7 +39,7 @@ void AHA_Optimizer::solve() {
     auto pickFlightMask = [&]() -> std::vector<int> {
         // choose axial / diagonal / omni with equal probability
         const double u = RNG_Utils::random01();
-        if (u < 1.0/3.0)      return flightEngine.axialFlight();
+        if (u < 1.0/3.0) return flightEngine.axialFlight();
         if (u < 2.0/3.0) return flightEngine.diagonalFlight();
         return flightEngine.omniFlight();
     };

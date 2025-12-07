@@ -3,6 +3,7 @@
 #include "RNG_Utils.h"
 #include "AHA_Optimizer.h"
 #include <iostream>
+#include <chrono>
 
 // Compute Euclidean norm ‖x‖₂.
 double l2norm(const std::vector<double>& x) {
@@ -80,10 +81,10 @@ void demo_usage(const Problem& prob, int populationSize, int iterations, unsigne
 
 
 
-#include "Problems/SphereProblem.h"
-#include "Problems/AbsoluteValueProblem.h"
+#include "Problems/Sphere.h"
+#include "Problems/AbsoluteValue.h"
 #include "Problems/ShiftedQuadratic.h"
-#include "Problems/RastriginProblem.h"
+#include "Problems/Rastrigin.h"
 
 void sanity_tests(const int pop, const int iters, const int dimension, const unsigned seed)
 {
@@ -108,7 +109,7 @@ void sanity_tests(const int pop, const int iters, const int dimension, const uns
     {
         constexpr double tol_x_pt   = 1e-12;
         constexpr double tol_f_pt   = 1e-12;
-        const ShiftedQuadratic prob;
+        const ShiftedQuadraticProblem prob;
         RNG_Utils::initialize(seed);
         run_and_check_to_point(prob, pop, iters, {3.0, -2.0}, tol_f_pt, tol_x_pt, "ShiftedQuadratic");
     }
