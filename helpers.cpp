@@ -85,50 +85,115 @@ void demo_usage(const Problem& prob, int populationSize, int iterations, unsigne
 #include "Problems/AbsoluteValue.h"
 #include "Problems/ShiftedQuadratic.h"
 #include "Problems/Rastrigin.h"
+#include "Problems/Rosenbrock.h"
+#include "Problems/Griewank.h"
+#include "Problems/Schwefel12.h"
+#include "Problems/Schwefel226.h"
 
 void sanity_tests(const int pop, const int iters, const int dimension, const unsigned seed)
 {
-    std::cout << "-- starting sanity tests --\nPopulation size: " << pop << "\nNr. of iterations: " << iters << "\nDimension: " << dimension << "\n[seed=" << seed << "]\n\n";
+    std::cout << "-- starting sanity tests --\nPopulation size: " << pop
+              << "\nNr. of iterations: " << iters
+              << "\nDimension: " << dimension
+              << "\n[seed=" << seed << "]\n\n";
+
+    // Very strict zero-optimum tolerances (your choice)
     constexpr double tol_f_zero = 1e-12, tol_x_zero = 1e-12;
 
-    // Sphere (d=10): optimum at 0
+    // Sphere (d=dimension): optimum at 0
     {
         const SphereProblem prob(dimension);
         RNG_Utils::initialize(seed);
-        run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Sphere(d=10)");
+        run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Sphere(d)");
     }
 
-    // Absolute value (d=10): optimum at 0
+    // Absolute value (d=dimension): optimum at 0
     {
         const AbsoluteValueProblem prob(dimension);
         RNG_Utils::initialize(seed);
-        run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Abs(d=10)");
+        run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Abs(d)");
     }
 
-    // ShiftedQuadratic (2D): optimum at (3,-2)
+    // ShiftedQuadratic (2D fixed): optimum at (3,-2)
     {
-        constexpr double tol_x_pt   = 1e-12;
-        constexpr double tol_f_pt   = 1e-12;
-        const ShiftedQuadraticProblem prob;
+        constexpr double tol_f_pt = 1e-12, tol_x_pt = 1e-12;
+        const ShiftedQuadraticProblem prob;  // your 2D problem
         RNG_Utils::initialize(seed);
         run_and_check_to_point(prob, pop, iters, {3.0, -2.0}, tol_f_pt, tol_x_pt, "ShiftedQuadratic");
     }
 
-    // Rastrigin (d=10)
+    // Rastrigin (d=dimension): multimodal, optimum at 0 (looser tolerances)
     {
         const RastriginProblem prob(dimension);
         RNG_Utils::initialize(seed);
 
         auto [best_f, best_x] = run_once(prob, pop, iters, seed);
-
         const double f    = best_f;
-        const double xerr = l2norm(best_x);   // distance to optimum at zero
+        const double xerr = l2norm(best_x);
 
         constexpr double tol_f_rast = 1e-4;
         constexpr double tol_x_rast = 1e-4;
 
         std::cout << ((f <= tol_f_rast && xerr <= tol_x_rast) ? "[PASS] " : "[FAIL] ")
-                  << "Rastrigin(d=10) f=" << f << " x_err=" << xerr << "\n";
+                  << "Rastrigin(d) f=" << f << " x_err=" << xerr << "\n";
+    }
+
+    // Rosenbrock (d=dimension): optimum at (1,...,1) (use point check)
+    {
+        const RosenbrockProblem prob(dimension);
+        RNG_Utils::initialize(seed);
+
+        // Slightly looser than zero-optimum tests (valley is narrow)
+        constexpr double tol_f_ros = 1e-6;
+        constexpr double tol_x_ros = 1e-3;
+
+        std::vector<double> target(dimension, 1.0);
+        run_and_check_to_point(const_cast<RosenbrockProblem&>(prob),  // helper takes non-const
+                               pop, iters, target, tol_f_ros, tol_x_ros, "Rosenbrock(d)");
+    }
+
+    // Griewank (d=dimension): optimum at 0 (looser tolerances)
+    {
+        const GriewankProblem prob(dimension);
+        RNG_Utils::initialize(seed);
+
+        auto [best_f, best_x] = run_once(prob, pop, iters, seed);
+        const double f    = best_f;
+        const double xerr = l2norm(best_x);
+
+        constexpr double tol_f_gri = 1e-4;
+        constexpr double tol_x_gri = 1e-4;
+
+        std::cout << ((f <= tol_f_gri && xerr <= tol_x_gri) ? "[PASS] " : "[FAIL] ")
+                  << "Griewank(d) f=" << f << " x_err=" << xerr << "\n";
+    }
+
+    // Schwefel 1.2 (d=dimension): optimum at 0 (zero check ok)
+    {
+        const Schwefel12Problem prob(dimension);
+        RNG_Utils::initialize(seed);
+        run_and_check_to_zero(prob, pop, iters, tol_f_zero, tol_x_zero, "Schwefel1.2(d)");
+    }
+
+    // Schwefel 2.26 (d=dimension): optimum near 420.968746... per dim (point check)
+    {
+        const Schwefel226MNProblem prob(dimension);
+        RNG_Utils::initialize(seed);
+
+        auto [best_f, best_x] = run_once(prob, pop, iters, seed);
+        const double f = best_f;
+
+        // Build target ≈ (420.968746, ..., 420.968746)
+        constexpr double xopt = 420.968746;
+        std::vector<double> target(dimension, xopt);
+        const double xerr = l2dist(best_x, target);
+
+        // Reasonable tolerances for a hard multimodal function
+        constexpr double tol_f_sch = 1e-6;   // adjust if your budget is smaller
+        constexpr double tol_x_sch = 1e-1;   // loose positional tolerance
+
+        std::cout << ((f <= tol_f_sch && xerr <= tol_x_sch) ? "[PASS] " : "[FAIL] ")
+                  << "Schwefel2.26(d) f=" << f << " x_err=" << xerr << "\n";
     }
 
     std::cout << "-- sanity tests finished --\n\n";
