@@ -11,7 +11,7 @@
 #include "../Problem.h"
 
 
-struct RastriginProblem : public Problem {
+struct RastriginProblem final : public Problem {
     explicit RastriginProblem(const int dimension)
         : Problem(std::vector<double>(dimension, -5.12),
             std::vector<double>(dimension, 5.12)) {}

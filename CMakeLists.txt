@@ -16,12 +16,12 @@ add_executable(SF2565_PROJECT main.cpp
         Problem.h
         RNG_Utils.h
         RNG_Utils.cpp
-        Problems/SphereProblem.h
-        Problems/AbsoluteValueProblem.h
+        Problems/Sphere.h
+        Problems/AbsoluteValue.h
         Problems/ShiftedQuadratic.h
         helpers.cpp
         helpers.h
-        Problems/RastriginProblem.h
+        Problems/Rastrigin.h
         Problems/Rosenbrock.h
         Problems/Schwefel12.h
         Problems/Schwefel226.h
