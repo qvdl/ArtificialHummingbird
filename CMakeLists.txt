@@ -21,4 +21,8 @@ add_executable(SF2565_PROJECT main.cpp
         Problems/ShiftedQuadratic.h
         helpers.cpp
         helpers.h
-        Problems/RastriginProblem.h)
+        Problems/RastriginProblem.h
+        Problems/Rosenbrock.h
+        Problems/Schwefel12.h
+        Problems/Schwefel226.h
+        Problems/Griewank.h)
