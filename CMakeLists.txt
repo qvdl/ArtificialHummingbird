@@ -8,8 +8,7 @@ include(FetchContent)
 FetchContent_Declare(
         taskflow
         GIT_REPOSITORY https://github.com/taskflow/taskflow.git
-        # Optionally pin a version:
-        # GIT_TAG v3.7.0
+        GIT_TAG v3.7.0
 )
 FetchContent_MakeAvailable(taskflow)
 
@@ -39,3 +38,4 @@ add_executable(SF2565_PROJECT main.cpp
 )
 
 target_link_libraries(SF2565_PROJECT PRIVATE Taskflow)
+target_compile_definitions(SF2565_PROJECT PRIVATE AHA_WITH_TASKFLOW)
