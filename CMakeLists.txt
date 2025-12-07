@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 project(SF2565_PROJECT)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(FetchContent)
+FetchContent_Declare(
+        taskflow
+        GIT_REPOSITORY https://github.com/taskflow/taskflow.git
+        # Optionally pin a version:
+        # GIT_TAG v3.7.0
+)
+FetchContent_MakeAvailable(taskflow)
 
 add_executable(SF2565_PROJECT main.cpp
         AHA_Optimizer.cpp
@@ -27,3 +37,5 @@ add_executable(SF2565_PROJECT main.cpp
         Problems/Schwefel226.h
         Problems/Griewank.h
 )
+
+target_link_libraries(SF2565_PROJECT PRIVATE Taskflow)
