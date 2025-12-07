@@ -11,6 +11,7 @@ struct AHA_Config {
     int max_iterations;
     int dimension;
     int migration_coefficient;
+    bool use_taskflow=false;
 
     AHA_Config(const int n, const int it, const int d) : population_size(n), max_iterations(it), dimension(d), migration_coefficient(2*n) {}
     AHA_Config(const int n, const int it, const int d, const int m) : population_size(n), max_iterations(it), dimension(d), migration_coefficient(m) {}
