@@ -119,7 +119,7 @@ void sanity_tests(const int pop, const int iters, const int dimension, const uns
     // ShiftedQuadratic (2D fixed): optimum at (3,-2)
     {
         constexpr double tol_f_pt = 1e-12, tol_x_pt = 1e-12;
-        const ShiftedQuadraticProblem prob;  // your 2D problem
+        const ShiftedQuadraticProblem prob(dimension);  // your 2D problem
         RNG_Utils::initialize(seed);
         run_and_check_to_point(prob, pop, iters, {3.0, -2.0}, tol_f_pt, tol_x_pt, "ShiftedQuadratic");
     }
@@ -179,7 +179,7 @@ void sanity_tests(const int pop, const int iters, const int dimension, const uns
 
     // Schwefel 2.26 (d=dimension): optimum near 420.968746... per dim (point check)
     {
-        const Schwefel226MNProblem prob(dimension);
+        const Schwefel226Problem prob(dimension);
         RNG_Utils::initialize(seed);
 
         auto [best_f, best_x] = run_once(prob, pop, iters, seed);
