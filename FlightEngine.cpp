@@ -17,30 +17,29 @@ std::vector<int> FlightEngine::axialFlight() const {
 // equation (4)
 std::vector<int> FlightEngine::diagonalFlight() const {
     std::vector<int> mask(dimension, 0);
-
-    // in 1D, diagonal move stays on the only axis
-    if (dimension <= 1) {
-        if (dimension == 1) { mask[0] = 1; }
+    if (dimension <= 1) {                    // degenerate; fall back to omni on 1-D
+        std::fill(mask.begin(), mask.end(), 1);
         return mask;
     }
-    // compute random r1 in (0, 1]
-    double r1 = RNG_Utils::random01();
-    if (r1 <= 0.0) r1 = std::nextafter(0.0, 1.0);
 
-    // compute random k
-    const int k_min = 2;
-    int k_max = static_cast<int>(std::ceil(r1*(dimension-2)) + 1);
-    if (k_max < k_min) k_max=k_min;
-    if (k_max > dimension) k_max=dimension;
+    // Paper's k range: 2 .. ceil(r1*(d-2)) + 1, clamped into [2, d]
+    const double r1 = RNG_Utils::random01();
+    int kmax = static_cast<int>(std::ceil(r1 * (dimension - 2))) + 1;
+    if (kmax < 2) kmax = 2;
+    if (kmax > dimension) kmax = dimension;
 
-    const int k = RNG_Utils::randomInt(k_min, k_max);
+    // If RNG_Utils::randomInt(a,b) is inclusive, this is fine.
+    // If it's half-open [a,b), change to randomInt(2, kmax+1) - 1.
+    const int k = RNG_Utils::randomInt(2, kmax);
 
-    // sample k unique axes from [0..dimension-1]
-    const auto fullPermutation = RNG_Utils::randomPermutation(dimension);
-    for (int idx=0; idx<k; ++idx) {
-        mask[ fullPermutation[idx] ] = 1;
+    // Pick k unique axes with partial Fisher–Yates (O(k)).
+    std::vector<int> idx(dimension);
+    std::iota(idx.begin(), idx.end(), 0);
+    for (int t = 0; t < k; ++t) {
+        const int r = t + RNG_Utils::randomInt(0, dimension - 1 - t);
+        std::swap(idx[t], idx[r]);
+        mask[idx[t]] = 1;
     }
-
     return mask;
 }
 
