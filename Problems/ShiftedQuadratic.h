@@ -8,7 +8,7 @@
 #include "../Problem.h"
 
 struct ShiftedQuadraticProblem final : public Problem {
-    explicit ShiftedQuadraticProblem() : Problem( {-10.0, -10.0}, {10.0, 10.0} ) {}
+    explicit ShiftedQuadraticProblem(const int dim) : Problem( {-10.0, -10.0}, {10.0, 10.0} ) {}
 
     [[nodiscard]] double evaluate(const std::vector<double> &x) const override {
         incrementEvalCount();
