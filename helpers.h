@@ -39,4 +39,6 @@ namespace aha_log {
         long long fevals_override = -1,
         const char* algo_label = "AHA"
     );
+
+    void run_aha_and_log_csv_(int dim, int pop_size, int nr_it, int budget, const char* csv_path);
 }
