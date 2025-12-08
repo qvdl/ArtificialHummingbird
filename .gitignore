@@ -1,0 +1,28 @@
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+
+# Build directories
+build/
+build-debug/
+build-release/
+cmake-build-*/
+out/
+
+# CLion
+.idea/
+
+# Binaries
+*.o
+*.a
+*.so
+*.exe
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
