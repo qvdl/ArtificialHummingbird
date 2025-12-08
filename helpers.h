@@ -2,6 +2,7 @@
 #include <vector>
 #include "Problem.h"
 
+
 struct Result { double best_f; std::vector<double> best_x; };
 
 double l2norm(const std::vector<double>& x);
@@ -19,3 +20,23 @@ void demo_usage(const Problem& prob, int populationSize, int iterations, unsigne
 
 // one-call sanity tests
 void sanity_tests(int pop, int iters, int dimension, unsigned seed);
+
+
+namespace aha_log {
+    void write_csv_header(const std::string& path);
+
+    void run_aha_and_log_csv(
+        const std::string& csv_path,
+        const std::string& problem_name,
+        int dim,
+        int seed,
+        long long budget,
+        Problem& problem,
+        int populationSize,
+        int maxIter,
+        const std::vector<double>& x_star,
+        bool use_taskflow = false,
+        long long fevals_override = -1,
+        const char* algo_label = "AHA"
+    );
+}

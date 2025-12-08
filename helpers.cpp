@@ -4,6 +4,8 @@
 #include "AHA_Optimizer.h"
 #include <iostream>
 #include <chrono>
+#include <filesystem>
+#include <fstream>
 
 // Compute Euclidean norm ‖x‖₂.
 double l2norm(const std::vector<double>& x) {
@@ -197,4 +199,52 @@ void sanity_tests(const int pop, const int iters, const int dimension, const uns
     }
 
     std::cout << "-- sanity tests finished --\n\n";
+}
+
+
+void aha_log::write_csv_header(const std::string &path) {
+    namespace fs = std::filesystem;
+    bool need_header = !fs::exists(path) || fs::file_size(path) == 0;
+    if (need_header) {
+        std::ofstream out(path, std::ios::app);
+        out << "problem,algo,dim,seed,budget,fevals,f_best,x_err,time_ms\n";
+    }
+}
+
+void aha_log::run_aha_and_log_csv(const std::string &csv_path, const std::string &problem_name, int dim, int seed, long long budget, Problem &problem, int populationSize, int maxIter, const std::vector<double> &x_star, bool use_taskflow, long long fevals_override, const char *algo_label) {
+    {
+        write_csv_header(csv_path);
+
+        // If you seed your RNG somewhere central, do it here (placeholder):
+        // RNG::seed(seed);
+
+        AHA_Optimizer aha(problem, populationSize, maxIter);
+
+        const auto t0 = std::chrono::steady_clock::now();
+        aha.solve();
+        const auto t1  = std::chrono::steady_clock::now();
+        const double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
+
+        // Get best solution (adapt names if your API differs)
+        const std::vector<double>& x_best = aha.getGlobalBestPosition();
+        const double f_best = aha.getGlobalBestFitness();
+
+        // Function evaluations: user-supplied exact value or a simple estimate
+        auto fevals = problem.getEvalCount();
+
+        const double err = l2dist(x_best, x_star);
+
+        std::ofstream out(csv_path, std::ios::app);
+        out.setf(std::ios::scientific);
+        out << std::setprecision(16)
+            << problem_name  << ","
+            << algo_label    << ","
+            << dim           << ","
+            << seed          << ","
+            << budget        << ","
+            << fevals        << ","
+            << f_best        << ","
+            << err           << ","
+            << ms            << "\n";
+    }
 }
