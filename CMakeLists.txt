@@ -21,7 +21,6 @@ add_executable(SF2565_PROJECT main.cpp
         FlightEngine.cpp
         FlightEngine.h
         AHA_Config.h
-        Problem.cpp
         Problem.h
         RNG_Utils.h
         RNG_Utils.cpp
