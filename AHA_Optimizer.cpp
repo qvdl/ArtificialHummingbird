@@ -6,7 +6,6 @@
 #include "AHA_Optimizer.h"
 #include "RNG_Utils.h"
 #include <limits>
-#include <taskflow/algorithm/for_each.hpp>
 
 
 // --- constructor ---
@@ -32,9 +31,11 @@ AHA_Optimizer::AHA_Optimizer(const Problem& prob, const int populationSize, cons
 void AHA_Optimizer::solve() {
     const int n = static_cast<int>(population.size());
     const int d = static_cast<int>(problem.getLowerBound().size());
-    const int M = 2 * n;                 // migration coefficient (paper default)
-    constexpr double guidedProb = 0.5;       // 50/50 guided vs territorial
+    const int M = 2 * n;                                                // AHA migration coefficient (paper default): migrate every 2n iters.
+    constexpr double guidedProb = 0.5;                                  // AHA uses 50/50 split between Guided and Territorial foraging.
 
+    // Pick one of the three flight skills with equal probability (Axial/Diagonal/Omni).
+    // Matches the flight masks D in the paper (see Fig. 3; Eqs. (3)–(5)).
     auto pickFlightMask = [&]() -> std::vector<int> {
         // choose axial / diagonal / omni with equal probability
         const double u = RNG_Utils::random01();
@@ -43,6 +44,10 @@ void AHA_Optimizer::solve() {
         return flightEngine.omniFlight();
     };
 
+
+    // GUIDED candidate: v = x_tar + a * D * (x_i - x_tar), a ~ N(0,1)
+    // This is Eq. (6) with the Gaussian factor from Eq. (7). We clip to bounds to stay in the domain.
+    // Greedy acceptance is applied later per Eq. (8).
     auto guidedCandidate = [&](const std::vector<double>& xi,
                                const std::vector<double>& xj) -> std::vector<double> {
         const auto D = pickFlightMask();
@@ -55,6 +60,8 @@ void AHA_Optimizer::solve() {
         return problem.clipToBoundaries(v);
     };
 
+    // TERRITORIAL candidate: v = x_i + b * D * x_i, b ~ N(0,1)
+    // This is Eq. (9) with the Gaussian factor from Eq. (10). Clipped to domain; greedy acceptance later (Eq. (8)).
     auto territorialCandidate = [&](const std::vector<double>& xi) -> std::vector<double> {
         const auto D = pickFlightMask();
         const double b = RNG_Utils::randomNormal();          // N(0,1)
@@ -65,22 +72,26 @@ void AHA_Optimizer::solve() {
         return problem.clipToBoundaries(v);
     };
 
+    // main optimization loop
     for (int iter = 1; iter <= maxIterations; ++iter) {
 
-        // --- per-bird foraging ---
+        // --- per-bird foraging phase (each iteration does either Guided or Territorial) ---
         for (int i = 0; i < n; ++i) {
             bool replaced = false;
 
-            // Do guided foraging with prob. 0.5, if population is at least 2
+            // With probability 0.5 (and n >= 2), do GUIDED foraging; otherwise TERRITORIAL.
             if (RNG_Utils::random01() < guidedProb && n >= 2) {
                 // --- GUIDED FORAGING ---
+
+                // Target selection from visit table:
+                // choose the source with the highest "visit level" for row i; tie-break by best fitness.
                 const int j = visitTable.getTarget(i, population); // target by visit-level, tie-break by fitness
 
-                // build candidate near target
+                // Build candidate by flying around the target x_j using flight mask D and Gaussian a (Eqs. (6)–(7)).
                 const auto v   = guidedCandidate(population[i].position, population[j].position);
                 const double fv = problem.evaluate(v);
 
-                // greedy acceptance (minimization)
+                // Greedy acceptance for minimization (Eq. (8)): replace x_i if f(v) < f(x_i).
                 if (fv < population[i].fitness) {
                     population[i].position = v;
                     population[i].fitness  = fv;
@@ -92,14 +103,20 @@ void AHA_Optimizer::solve() {
                     }
                 }
 
-                // visit-table maintenance
+                // Visit-table maintenance for GUIDED:
+                // - age (+1) all non-target columns in row i,
+                // - set (i,j) to 0 (just visited),
+                // - if replacement happened, broadcast column i in all other rows to (row-max + 1).
                 visitTable.updateGuided(i, j, replaced);
 
             } else {
                 // --- TERRITORIAL FORAGING ---
+
+                // Build candidate by local exploration around x_i using flight mask D and Gaussian b (Eqs. (9)–(10)).
                 const auto v   = territorialCandidate(population[i].position);
                 const double fv = problem.evaluate(v);
 
+                // Greedy acceptance (Eq. (8))
                 if (fv < population[i].fitness) {
                     population[i].position = v;
                     population[i].fitness  = fv;
@@ -111,12 +128,16 @@ void AHA_Optimizer::solve() {
                     }
                 }
 
-                // visit-table maintenance
+
+                // Visit-table maintenance for TERRITORIAL:
+                // - age (+1) all *other* columns in row i,
+                // - mark the diagonal entry as "just visited" conceptually (paper keeps diagonal as null/—; your VT handles it),
+                // - if replacement happened, broadcast column i in other rows to (row-max + 1).
                 visitTable.updateTerritorial(i, replaced);
             }
         }
 
-        // --- migration every M iterations ---
+        // --- migration every M=2n iterations ---
         if (iter % M == 0) {
             // find worst by fitness (highest, since we minimize)
             int worst = 0;
