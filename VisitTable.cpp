@@ -81,10 +81,6 @@ void VisitTable::updateTerritorial(int const residentBirdIndex, bool const sourc
         if (v != -1) v+=1;
     }
 
-    // mark own source as "just visited"
-    at(residentBirdIndex, residentBirdIndex)=0;
-
-
     // if the bird's own source was replaced by the territorial candidate,
     // broadcast that update to everyone else:
     // For every other bird r, set VT[r, i] = (max over row r, excluding diag) + 1
