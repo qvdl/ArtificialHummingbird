@@ -15,8 +15,8 @@
 // f(x) = A * d - sum_{i=1..d} x_i * sin(sqrt(|x_i|))
 // Global minimum at x_i ≈ 420.968746..., with f = 0
 // Typical bounds: [-500, 500]^d
-struct Schwefel226MNProblem final : public Problem {
-    explicit Schwefel226MNProblem(const int dimension)
+struct Schwefel226Problem final : public Problem {
+    explicit Schwefel226Problem(const int dimension)
         : Problem(std::vector<double>(dimension, -500.0),
                   std::vector<double>(dimension,  500.0)) {}
 
