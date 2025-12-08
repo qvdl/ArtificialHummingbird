@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <string>
 #include "Problem.h"
 
 struct Result { double best_f; std::vector<double> best_x; };
@@ -18,5 +17,5 @@ void run_and_check_to_point(const Problem& prob, int pop, int iters, const std::
 // ultra-compact usage demo
 void demo_usage(const Problem& prob, int populationSize, int iterations, unsigned seed);
 
-// one-call sanity tests for Sphere / Abs / ShiftedQuadratic / Rastrigin
+// one-call sanity tests
 void sanity_tests(int pop, int iters, int dimension, unsigned seed);
