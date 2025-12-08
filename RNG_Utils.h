@@ -2,8 +2,6 @@
 #pragma once
 #include <random>
 #include <vector>
-#include <cstdint>
-#include <algorithm>
 
 namespace RNG_Utils {
     void initialize(unsigned int seed);
