@@ -14,6 +14,7 @@ class Problem {
 private:
     std::vector<double> lowerBound;
     std::vector<double> upperBound;
+    mutable size_t evalCount=0;
 public:
     virtual ~Problem() = default;
 
@@ -28,11 +29,18 @@ public:
         }
     }
 
-    [[nodiscard]] virtual double evaluate(const std::vector<double>& x) const = 0;
+    void incrementEvalCount() const { evalCount++; }
+
+    [[nodiscard]] virtual double evaluate(const std::vector<double>& x) const {
+        incrementEvalCount();
+        return 0.0;
+    }
 
     [[nodiscard]] size_t dimension() const { return lowerBound.size(); }
     [[nodiscard]] const std::vector<double>& getLowerBound() const { return lowerBound; }
     [[nodiscard]] const std::vector<double>& getUpperBound() const { return upperBound; }
+    [[nodiscard]] size_t getEvalCount() const { return evalCount; }
+    void resetEvalCount() const { evalCount=0; }
 
     [[nodiscard]] std::vector<double> clipToBoundaries(const std::vector<double>& solution) const {
         if (solution.size() != lowerBound.size()) {

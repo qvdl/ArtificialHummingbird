@@ -18,6 +18,8 @@ struct Schwefel12Problem final : public Problem {
                   std::vector<double>(dimension,  100.0)) {}
 
     [[nodiscard]] double evaluate(const std::vector<double>& x) const override {
+        incrementEvalCount();
+
         double s = 0.0;
         double cumsum = 0.0;
         for (const double xi : x) {

@@ -20,6 +20,8 @@ struct RosenbrockProblem final : public Problem {
                   std::vector<double>(dimension, 10.0)) {}
 
     [[nodiscard]] double evaluate(const std::vector<double>& x) const override {
+        incrementEvalCount();
+
         const int d = static_cast<int>(x.size());
         double s = 0.0;
         // If d < 2, the sum is empty -> 0 (but use d >= 2 in tests)

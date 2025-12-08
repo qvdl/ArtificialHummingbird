@@ -21,6 +21,8 @@ struct Schwefel226MNProblem final : public Problem {
                   std::vector<double>(dimension,  500.0)) {}
 
     [[nodiscard]] double evaluate(const std::vector<double>& x) const override {
+        incrementEvalCount();
+
         const int d = static_cast<int>(x.size());
         if (d == 0) return 0.0;
 

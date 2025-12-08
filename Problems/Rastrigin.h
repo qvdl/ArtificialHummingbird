@@ -17,6 +17,8 @@ struct RastriginProblem final : public Problem {
             std::vector<double>(dimension, 5.12)) {}
 
     [[nodiscard]] double evaluate(const std::vector<double> &x) const override {
+        incrementEvalCount();
+
         constexpr double A = 10.0;
         constexpr double two_pi = 2.0 * M_PI;
         const int d = static_cast<int>(x.size());

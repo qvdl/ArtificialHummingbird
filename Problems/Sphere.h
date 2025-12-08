@@ -14,6 +14,8 @@ struct SphereProblem final : public Problem {
         ) {}
 
     [[nodiscard]] double evaluate(const std::vector<double> &x) const override {
+        incrementEvalCount();
+
         double sum=0.0;
         for (const auto v : x) { sum += v*v; }
         return sum; // solution if 0 at x=0
