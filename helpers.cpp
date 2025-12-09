@@ -7,6 +7,16 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include "Problems/Sphere.h"
+#include "Problems/AbsoluteValue.h"
+#include "Problems/ShiftedQuadratic.h"
+#include "Problems/Rastrigin.h"
+#include "Problems/Rosenbrock.h"
+#include "Problems/Griewank.h"
+#include "Problems/Schwefel12.h"
+#include "Problems/Schwefel226.h"
+
+
 
 // Compute Euclidean norm ‖x‖₂.
 double l2norm(const std::vector<double>& x) {
@@ -82,16 +92,6 @@ void demo_usage(const Problem& prob, int populationSize, int iterations, unsigne
 }
 
 
-
-
-#include "Problems/Sphere.h"
-#include "Problems/AbsoluteValue.h"
-#include "Problems/ShiftedQuadratic.h"
-#include "Problems/Rastrigin.h"
-#include "Problems/Rosenbrock.h"
-#include "Problems/Griewank.h"
-#include "Problems/Schwefel12.h"
-#include "Problems/Schwefel226.h"
 
 void sanity_tests(const int pop, const int iters, const int dimension, const unsigned seed)
 {
@@ -278,7 +278,10 @@ void aha_log::run_aha_and_log_csv_(int dim, int pop_size, int nr_it, int budget,
         {"Schwefel226",     [](int d){ return std::make_unique<Schwefel226Problem>(d); },     S226},
     };
 
+    constexpr auto n_seeds = seed_last-seed_first;
     for (const auto&[name, make, xstar] : P) {
+        std::cout << "Running " << name << "\n";
+        auto start_time = std::chrono::high_resolution_clock::now();
         for (int seed = seed_first; seed < seed_last; ++seed) {
             auto prob = make(dim);
             aha_log::run_aha_and_log_csv(
@@ -293,6 +296,8 @@ void aha_log::run_aha_and_log_csv_(int dim, int pop_size, int nr_it, int budget,
                 xstar(dim)      // used for x_err in your logger
             );
         }
+        const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() / 1000.0;
+        std::cout << "Finished " << n_seeds << " runs\nDuration: " << duration << " s --- Avg: " << duration / static_cast<double>(n_seeds) << " s per run\n\n";
     }
 }
 
