@@ -4,7 +4,9 @@ project(SF2565_PROJECT)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(SF2565_PROJECT   bench_driver.cpp
+add_executable(SF2565_PROJECT
+        main.cpp
+#        bench_driver.cpp #// uncomment for benchmark run
         AHA_Optimizer.cpp
         AHA_Optimizer.h
         VisitTable.cpp
