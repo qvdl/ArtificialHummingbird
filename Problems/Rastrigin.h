@@ -31,7 +31,7 @@ struct RastriginProblem final : public Problem {
             const double xi = x[i];
             s += xi*xi - A*std::cos(two_pi * xi) + A;
         }
-        return -s;
+        return s;
     }
 };
 
