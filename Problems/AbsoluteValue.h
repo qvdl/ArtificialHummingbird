@@ -8,7 +8,7 @@
 #include "../Problem.h"
 
 struct AbsoluteValueProblem final : public Problem {
-    explicit AbsoluteValueProblem(const int dimension) :
+    explicit AbsoluteValueProblem(const int dimension=30) :
     Problem(
         std::vector<double>(dimension, -10.0),
         std::vector<double>(dimension, 10.0)
