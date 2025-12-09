@@ -15,6 +15,7 @@
 
 #include "Problem.h"
 #include "AHA_Optimizer.h"
+#include "RNG_Utils.h"
 
 #include "Problems/AbsoluteValue.h"
 #include "Problems/Ackley.h"
@@ -115,28 +116,22 @@ int main(int argc, char** argv) {
   problems.reserve(32);
 
   // ===== REGISTER PROBLEMS HERE (add/remove freely) =====
-  // High-D (30D typical)
-  problems.push_back({"Sphere(d=30)",        std::make_unique<SphereProblem>(30)});
-  problems.push_back({"Rastrigin(d=30)",     std::make_unique<RastriginProblem>(30)});
-  problems.push_back({"Rosenbrock(d=30)",    std::make_unique<RosenbrockProblem>(30)});
-  problems.push_back({"Griewank(d=30)",      std::make_unique<GriewankProblem>(30)});
   problems.push_back({"Ackley(d=30)",        std::make_unique<AckleyProblem>(30)});
-  problems.push_back({"Schwefel226(d=30)",   std::make_unique<Schwefel226Problem>(30)});
-  problems.push_back({"Schwefel1.2(d=30)",   std::make_unique<Schwefel12Problem>(30)});
-  problems.push_back({"Zakharov(d=30)",      std::make_unique<ZakharovProblem>(30)});
-  // problems.push_back({"AbsoluteValue(d=30)", std::make_unique<AbsoluteValueProblem>(30)});
-  // problems.push_back({"ShiftedQuadratic(d=30)", std::make_unique<ShiftedQuadraticProblem>(30)});
-
-  // Fixed low-D (nice for visuals / correctness)
+  problems.push_back({"Beale(d=2)",            std::make_unique<BealeProblem>()});
   problems.push_back({"Branin(d=2)",           std::make_unique<BraninProblem>()});
   problems.push_back({"Easom(d=2)",            std::make_unique<EasomProblem>()});
-  problems.push_back({"SixHumpCamelBack(d=2)", std::make_unique<SixHumpCamelBackProblem>()});
-  problems.push_back({"Beale(d=2)",            std::make_unique<BealeProblem>()});
-
-  // Structured / special dimensions
-  problems.push_back({"Powell(d=24)",          std::make_unique<PowellProblem>(24)});
-  problems.push_back({"Shekel10(d=4)",         std::make_unique<Shekel10Problem>()});
+  problems.push_back({"Griewank(d=30)",      std::make_unique<GriewankProblem>(30)});
   problems.push_back({"Michalewicz10(d=10)",   std::make_unique<Michalewicz10Problem>()});
+  problems.push_back({"Powell(d=24)",          std::make_unique<PowellProblem>(24)});
+  problems.push_back({"Rastrigin(d=30)",     std::make_unique<RastriginProblem>(30)});
+  problems.push_back({"Rosenbrock(d=30)",    std::make_unique<RosenbrockProblem>(30)});
+  problems.push_back({"Schwefel12(d=30)",   std::make_unique<Schwefel12Problem>(30)});
+  problems.push_back({"Schwefel226(d=30)",   std::make_unique<Schwefel226Problem>(30)});
+  problems.push_back({"Shekel10(d=4)",         std::make_unique<Shekel10Problem>()});
+  problems.push_back({"SixHumpCamelBack(d=2)", std::make_unique<SixHumpCamelBackProblem>()});
+  problems.push_back({"Sphere(d=30)",        std::make_unique<SphereProblem>(30)});
+  problems.push_back({"Zakharov(d=10)",      std::make_unique<ZakharovProblem>(30)});
+
 
   // --- CSV header ---
   std::ofstream csv(csv_path);
