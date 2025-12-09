@@ -4,15 +4,7 @@ project(SF2565_PROJECT)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include(FetchContent)
-FetchContent_Declare(
-        taskflow
-        GIT_REPOSITORY https://github.com/taskflow/taskflow.git
-        GIT_TAG v3.7.0
-)
-FetchContent_MakeAvailable(taskflow)
-
-add_executable(SF2565_PROJECT main.cpp
+add_executable(SF2565_PROJECT   bench_driver.cpp
         AHA_Optimizer.cpp
         AHA_Optimizer.h
         VisitTable.cpp
@@ -44,6 +36,3 @@ add_executable(SF2565_PROJECT main.cpp
         Problems/Powell.h
         Problems/Easom.h
 )
-
-target_link_libraries(SF2565_PROJECT PRIVATE Taskflow)
-target_compile_definitions(SF2565_PROJECT PRIVATE AHA_WITH_TASKFLOW)
