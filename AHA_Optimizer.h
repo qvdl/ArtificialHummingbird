@@ -27,6 +27,7 @@ public:
     AHA_Optimizer(const Problem& prob, int populationSize, int maxIter);
 
     void solve(); // main algorithm
+    void solve_optimized();
 
     [[nodiscard]] const std::vector<double>& getGlobalBestPosition() const { return globalBestPosition; }
     [[nodiscard]] double getGlobalBestFitness() const { return globalBestFitness; }
