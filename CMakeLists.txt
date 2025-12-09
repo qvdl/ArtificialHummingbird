@@ -34,6 +34,15 @@ add_executable(SF2565_PROJECT main.cpp
         Problems/Schwefel12.h
         Problems/Schwefel226.h
         Problems/Griewank.h
+        Problems/Ackley.h
+        Problems/Zakharov.h
+        Problems/Michalewicz10.h
+        Problems/Shekel10.h
+        Problems/SixHumpCamelBack.h
+        Problems/Beale.h
+        Problems/Branin.h
+        Problems/Powell.h
+        Problems/Easom.h
 )
 
 target_link_libraries(SF2565_PROJECT PRIVATE Taskflow)

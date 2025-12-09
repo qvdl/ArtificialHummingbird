@@ -7,10 +7,14 @@
 
 #include "../Problem.h"
 
+// UNIMODAL -- SEPERABLE
+// default dimentions: 30
+// solution f=0 at x=0
+
 struct SphereProblem final : public Problem {
-    explicit SphereProblem(const int dimension) : Problem(
-        std::vector<double>(dimension, -5.0),
-        std::vector<double>(dimension, 5.0)
+    explicit SphereProblem(const int dimension=30) : Problem(
+        std::vector<double>(dimension, -100.0),
+        std::vector<double>(dimension, 100.0)
         ) {}
 
     [[nodiscard]] double evaluate(const std::vector<double> &x) const override {
@@ -18,7 +22,7 @@ struct SphereProblem final : public Problem {
 
         double sum=0.0;
         for (const auto v : x) { sum += v*v; }
-        return sum; // solution if 0 at x=0
+        return sum;
     }
 };
 

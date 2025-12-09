@@ -11,12 +11,11 @@
 #include <cmath>
 #include "../Problem.h"
 
-// Griewank function (multimodal, mild epistasis)
-// f(x) = 1 + sum_{i=1}^d (x_i^2 / 4000) - prod_{i=1}^d cos(x_i / sqrt(i))
-// Global minimum at x = 0 with f = 0
-// Typical bounds: [-600, 600]^d
+// (weakly) MULTIMODAL
+// solution f=0 at x=0
+
 struct GriewankProblem final : public Problem {
-    explicit GriewankProblem(const int dimension)
+    explicit GriewankProblem(const int dimension=30)
         : Problem(std::vector<double>(dimension, -600.0),
                   std::vector<double>(dimension,  600.0)) {}
 
@@ -30,11 +29,12 @@ struct GriewankProblem final : public Problem {
         double prod = 1.0;
         for (int i = 0; i < d; ++i) {
             const double xi = x[i];
-            sum += (xi * xi) / 4000.0;
-            const double angle = xi / std::sqrt(static_cast<double>(i + 1));
+            const double xi_shifted = xi-100.0;
+            sum += (xi_shifted * xi_shifted) / 4000.0;
+            const double angle = xi_shifted / std::sqrt(static_cast<double>(i + 1));
             prod *= std::cos(angle);
         }
-        return 1.0 + sum - prod;  // min = 0 at x = 0
+        return 1.0 + sum - prod;
     }
 };
 
