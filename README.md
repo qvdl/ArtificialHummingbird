@@ -21,15 +21,17 @@ Compile with a C++20-compatible compiler. For example:
 
 ```bash
 g++ -O3 -std=c++20 *.cpp Problems/*.cpp -o aha
+```
 
 ## Running
 
+```bash
 ./aha
-
-To change the optimization problem, edit main.cpp and replace the selected Problem subclass.
+```
 
 ## Notes
 
+To change the optimization problem, edit main.cpp and replace the selected Problem subclass.
 Randomness is fully reproducible via a fixed seed.
 Benchmarking code is included in benchmark_driver.cpp
 
