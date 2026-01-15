@@ -11,6 +11,14 @@
 #include "Problem.h"
 #include "FlightEngine.h"
 
+
+/*
+ * AHA_Optimizer orchestrates the Artificial Hummingbird Algorithm:
+ *   - Initializes a population of Hummingbird objects (solutions)
+ *   - Runs the main AHA loop (guided / territorial foraging + periodic migration)
+ *   - Tracks the global best solution found so far
+ */
+
 class AHA_Optimizer {
 private:
     std::vector<Hummingbird> population;
