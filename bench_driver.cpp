@@ -118,6 +118,7 @@ static PaperTable paper_stats = {
 };
 
 // ========= main driver =========
+#ifdef AHA_BENCH
 int main(int argc, char** argv) {
   const int   R           = 30;          // independent runs (paper uses 30)
   const int   population  = 50;          // paper default
@@ -214,3 +215,4 @@ int main(int argc, char** argv) {
   std::cout << "\nWrote CSV: " << csv_path << "\n";
   return 0;
 }
+#endif
