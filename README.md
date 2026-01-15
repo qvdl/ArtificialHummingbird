@@ -30,9 +30,9 @@ g++ -std=gnu++20 *.cpp -o aha
 
 ## Notes
 
-To change the optimization problem, edit main.cpp and replace the selected Problem subclass.
-Randomness is fully reproducible via a fixed seed.
-Benchmarking code is included in benchmark_driver.cpp (build with g++ -std=gnu++20 -DAHA_BENCH *.cpp -o aha_bench), which runs the AHA optimizer multiple times on a suite of standard benchmark functions, computes summary statistics over independent runs, optionally compares them against reference results from the original paper, and writes the results to a CSV file for analysis.
+- To change the optimization problem, edit main.cpp and replace the selected Problem subclass.
+- Randomness is fully reproducible via a fixed seed.
+- Benchmarking code is included in benchmark_driver.cpp (build with g++ -std=gnu++20 -DAHA_BENCH *.cpp -o aha_bench), which runs the AHA optimizer multiple times on a suite of standard benchmark functions, computes summary statistics over independent runs, optionally compares them against reference results from the original paper, and writes the results to a CSV file for analysis.
 
 ## Reference
 
