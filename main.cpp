@@ -40,12 +40,12 @@ int main() {
     RNG_Utils::initialize(seed + dim);
 
     // Select the optimization problem to solve.
-    // To use a different problem, replace Schwefel226Problem with any other
+    // To use a different problem, replace SphereProblem with any other
     // Problem subclass included above, for example:
-    //   SphereProblem prob(dim);
+    //   Schwefel226Problem prob(dim);
     //   RastriginProblem prob(dim);
     //   AckleyProblem prob(dim);
-    const Schwefel226Problem prob(dim);
+    const SphereProblem prob(dim);
 
     // Construct the AHA optimizer with the chosen problem and parameters.
     AHA_Optimizer aha(prob, population_size, nr_iterations);
