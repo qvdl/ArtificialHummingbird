@@ -2,7 +2,6 @@
 
 This project contains a C++ implementation of the **Artificial Hummingbird Algorithm (AHA)**,  
 a bio-inspired metaheuristic optimizer proposed by Zhao et al.  
-The focus of the project is on translating the algorithm into efficient, readable C++ code and analyzing its behavior on benchmark optimization problems.
 
 ## Structure
 
@@ -20,7 +19,7 @@ The focus of the project is on translating the algorithm into efficient, readabl
 Compile with a C++20-compatible compiler. For example:
 
 ```bash
-g++ -O3 -std=c++20 *.cpp Problems/*.cpp -o aha
+g++ -std=gnu++20 *.cpp -o aha
 ```
 
 ## Running
@@ -33,7 +32,7 @@ g++ -O3 -std=c++20 *.cpp Problems/*.cpp -o aha
 
 To change the optimization problem, edit main.cpp and replace the selected Problem subclass.
 Randomness is fully reproducible via a fixed seed.
-Benchmarking code is included in benchmark_driver.cpp
+Benchmarking code is included in benchmark_driver.cpp (build with g++ -std=gnu++20 -DAHA_BENCH *.cpp -o aha_bench), which runs the AHA optimizer multiple times on a suite of standard benchmark functions, computes summary statistics over independent runs, optionally compares them against reference results from the original paper, and writes the results to a CSV file for analysis.
 
 ## Reference
 
