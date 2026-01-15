@@ -35,6 +35,14 @@
 #include "Problems/Sphere.h"
 #include "Problems/Zakharov.h"
 
+/*
+ * Benchmark/validation driver.
+ *
+ * This program runs the AHA optimizer multiple times on a suite of benchmark
+ * functions, summarizes performance statistics (mean/std/best/median/worst),
+ * and writes the results to a CSV file. Optionally, it prints differences
+ * versus reference numbers taken from the paper.
+ */
 
 // ========= small helpers =========
 struct Stats {
@@ -45,15 +53,19 @@ struct Stats {
   double worst  = 0.0;
 };
 
+// Compute summary statistics for a vector of run results.
 static Stats summarize(std::vector<double> v) {
   const int n = static_cast<int>(v.size());
   if (n == 0) return {};
   std::ranges::sort(v);
+
   const double sum = std::accumulate(v.begin(), v.end(), 0.0);
   const double mean = sum / n;
+
   double var = 0.0;                 // population variance
   for (const double x : v) var += (x - mean) * (x - mean);
   var /= n;
+
   Stats s;
   s.mean = mean;
   s.stdev = std::sqrt(var);
@@ -70,12 +82,14 @@ static double run_aha_once(Problem& prob,
                            int population,
                            int fe_budget,
                            unsigned seed) {
+  // Seed RNG to make each run reproducible.
   RNG_Utils::initialize(seed);
 
+  // Convert an evaluation budget into an iteration budget.
   const int maxIterations = std::max(1, fe_budget / population);
 
   AHA_Optimizer aha(prob, population, maxIterations);
-  aha.solve();  // your solve() updates global best internally
+  aha.solve();  // solve() updates global best internally
 
   return aha.getGlobalBestFitness();
 }
@@ -84,6 +98,7 @@ static double run_aha_once(Problem& prob,
 struct PaperRow { double mean; double stdev; };
 using PaperTable = std::map<std::string, PaperRow>;
 
+// Reference statistics (mean/std) from the paper, keyed by problem name.
 static PaperTable paper_stats = {
   {"Ackley(d=30)",        { 8.88e-16, 0.0 }},
   {"Beale(d=2)", { 0.0, 0.0}},
@@ -96,7 +111,7 @@ static PaperTable paper_stats = {
   {"Rosenbrock(d=30)",    {25.065057, 0.278139}},
   {"Schwefel12(d=30)", { 2.96e-278, 0.0 }},
   {"Schwefel226(d=30)",   { -12409.83, 225.97788 }},
-  {"Shekel10(d=4)",       {-10.53641, 0.0}},
+  {"Shekel10(d=4)",       {-10.53641, 1.78e-15}},
   {"SixHumpCamelBack(d=2)", { -1.031628, 6.65e-16 }},
   {"Sphere(d=30)",        {7.32e-292,        0.0}},
   {"Zakharov(d=10)", { 1.78e-262, 0.0 }},
@@ -104,18 +119,18 @@ static PaperTable paper_stats = {
 
 // ========= main driver =========
 int main(int argc, char** argv) {
-  // --- global config (adjust if you want) ---
   const int   R           = 30;          // independent runs (paper uses 30)
   const int   population  = 50;          // paper default
-  const int   FE_budget   = 50000;       // ~ paper budget per function
-  const auto  base_seed   = 20251209u;   // reproducible base seed
+  const int   FE_budget   = 50'000;      // approximate evaluation budget per function
+  const auto  base_seed   = 2565;        // reproducible base seed
   const char* csv_path    = "../aha_bench_results.csv";
 
+  // Register benchmark problems as (name, Problem instance).
   struct Item { std::string name; std::unique_ptr<Problem> ptr; };
   std::vector<Item> problems;
   problems.reserve(32);
 
-  // ===== REGISTER PROBLEMS HERE (add/remove freely) =====
+  // ===== REGISTER PROBLEMS HERE =====
   problems.push_back({"Ackley(d=30)",        std::make_unique<AckleyProblem>(30)});
   problems.push_back({"Beale(d=2)",            std::make_unique<BealeProblem>()});
   problems.push_back({"Branin(d=2)",           std::make_unique<BraninProblem>()});
@@ -132,15 +147,14 @@ int main(int argc, char** argv) {
   problems.push_back({"Sphere(d=30)",        std::make_unique<SphereProblem>(30)});
   problems.push_back({"Zakharov(d=10)",      std::make_unique<ZakharovProblem>(30)});
 
-
-  // --- CSV header ---
+  // --- CSV output setup ---
   std::ofstream csv(csv_path);
   if (!csv) {
     std::cerr << "ERROR: cannot open CSV for writing: " << csv_path << "\n";
     return 1;
   }
   csv << "problem,D,R,FE,pop,mean,std,best,median,worst\n";
-  csv << std::setprecision(16);
+  csv << std::setprecision(64);
 
   // --- run all problems ---
   for (auto& item : problems) {
@@ -150,8 +164,9 @@ int main(int argc, char** argv) {
     std::vector<double> results;
     results.reserve(R);
 
+    // Run optimizer R times with different seeds.
     for (int r = 0; r < R; ++r) {
-      prob.resetEvalCount();                  // clean eval counter (if you track it)
+      prob.resetEvalCount(); // reset counter
       const unsigned seed = base_seed + static_cast<unsigned>(r);
       const double gbest = run_aha_once(prob, population, FE_budget, seed);
       results.push_back(gbest);
@@ -159,7 +174,7 @@ int main(int argc, char** argv) {
 
     const Stats s = summarize(results);
 
-    // CSV row
+    // CSV row (one per benchmark problem).
     csv << item.name << ","
         << D << ","
         << R << ","
@@ -171,9 +186,9 @@ int main(int argc, char** argv) {
         << s.median << ","
         << s.worst << "\n";
 
-    // Console summary (+ optional Δ vs paper)
+    // Console summary;
     auto it = paper_stats.find(item.name);
-    std::cout << std::fixed << std::setprecision(6);
+    std::cout << std::fixed << std::setprecision(32);
     if (it != paper_stats.end()) {
       const auto [pmean, pstd] = it->second;
       const double d_mean = s.mean - pmean;

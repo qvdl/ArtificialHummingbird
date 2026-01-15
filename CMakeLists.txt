@@ -14,7 +14,6 @@ add_executable(SF2565_PROJECT
         Hummingbird.h
         FlightEngine.cpp
         FlightEngine.h
-        AHA_Config.h
         Problem.h
         RNG_Utils.h
         RNG_Utils.cpp

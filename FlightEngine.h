@@ -7,6 +7,16 @@
 
 #include <vector>
 
+/*
+ * FlightEngine generates binary masks D used in the AHA update equations.
+ * A mask entry D[k] = 1 means "update along dimension k", otherwise keep it fixed.
+ *
+ * The three flight types correspond to Eqs. (3)–(5) in the paper:
+ *   - axial:  update one axis
+ *   - diagonal: update a random subset of axes
+ *   - omni:   update all axes
+ */
+
 class FlightEngine {
 private:
     int dimension;
