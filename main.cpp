@@ -29,6 +29,7 @@
  * benchmark problem, as demonstration.
  */
 
+#ifndef AHA_BENCH
 int main() {
     // --- Parameters ---
     constexpr int population_size = 50;     // number of hummingbirds
@@ -63,3 +64,4 @@ int main() {
 
     return 0;
 }
+#endif
