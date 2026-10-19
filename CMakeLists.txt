@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
-project(SF2565_PROJECT)
+project(ArtificialHummingbird)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(SF2565_PROJECT
+add_executable(ArtificialHummingbird
         main.cpp
         bench_driver.cpp
         AHA_Optimizer.cpp
