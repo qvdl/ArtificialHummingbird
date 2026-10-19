@@ -3,6 +3,8 @@
 This project contains a C++ implementation of the **Artificial Hummingbird Algorithm (AHA)**,  
 a bio-inspired metaheuristic optimizer proposed by Zhao et al.  
 
+The project was developed for the SF2565 Program Construction in C++ for Scientific Computing at KTH Royal Institute of Technology.
+
 ## Structure
 
 - `AHA_Optimizer` – Core implementation of the AHA optimization loop
